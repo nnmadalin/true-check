@@ -15,7 +15,7 @@ const generativeModel = vertex_ai.preview.getGenerativeModel({
 
 async function generateContent(content:any) {
     const req = {
-      contents: [{role: 'user', parts: [{text: "It parses the content provided below and generates a json (Try to make the json complete!) (format, without starting with ```json and ending with ```, without the explanations in brackets: description (a brief description of the content provided), keywords, main_ideas (the main ideas of the content ).), websites (relevant sites for the respective content), translate all the text in English!\n\n Contents:" + content}]}],
+      contents: [{role: 'user', parts: [{text: "Would you like to generate an answer in JSON format (Try to make the json complete!) (the form is (without starting with ```json and ending with ```): is_fake, reason, recommendation; is_fake be true, false, or partial, all value be with a capital letter, reason and recommendation to be a vector with recommendations and reasons), translate all the text in English\n\nContent:" + content}]}],
     };
   
     const streamingResp = await generativeModel.generateContentStream(req);
