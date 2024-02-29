@@ -11,7 +11,10 @@ export const metadata: Metadata = {
   keywords: ["TrueCheck", "Prosoft", "Prosoft@NT", "AI"],
   authors:[
     {name: "Neauna Madalin", url:'https://nnmadalin.me/'}
-  ]
+  ],
+  icons:{
+    icon:"/logo.jpeg"
+  }
 
 };
 

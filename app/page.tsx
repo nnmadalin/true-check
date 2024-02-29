@@ -1,25 +1,14 @@
 "use client"
 
-import { useEffect, useState } from 'react';
-import AwesomeSlider from 'react-awesome-slider';
-import 'react-awesome-slider/dist/styles.css'; // Importă stilurile CSS
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
-const IndexPage = () => {
+export default function Home() {
+  const router = useRouter();
 
+  useEffect(() => {
+    router.push('/index.html');
+  }, []);
 
-  return (
-    <AwesomeSlider animation="cubeAnimation" bullets={false}>
-      <div>
-
-      </div>
-      <div>
-
-      </div>
-      <div>
-        
-      </div>
-    </AwesomeSlider>
-  );
-};
-
-export default IndexPage;
+  return null; // Nu este nevoie să returnezi nimic, deoarece utilizatorul va fi redirecționat automat
+}

@@ -150,7 +150,7 @@ export default function Detail() {
                                     <>
                                         <div className="w-[350px] b rounded-[10px] flex items-center justify-start flex-col">
                                             <div className={`w-[100px] h-[40px] rounded-[10px] bg-[#7FC668] text-[#225011] mb-[-20px] z-[1] font-firaSans font-bold flex items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)]`}>
-                                                {Object.keys(dbUUID.contentDomain).length != 0 && dbUUID.contentDomain.status == "yes" ? "Yes" : "No"}
+                                                {dbUUID.contentDomain != null && Object.keys(dbUUID.contentDomain).length != 0 && dbUUID.contentDomain.status == "yes" ? "Yes" : "No"}
                                             </div>
                                             <div className={`w-full h-[200px] bg-[#9EE2D5] rounded-[10px] p-4 pt-[25px] font-firaSans font-bold flex gap-5 flex-col items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)] text-[#514545]`}>
                                                 <h3 className="text-6xl">{keyIndexTimeline.toLocaleString(undefined, { minimumIntegerDigits: 2 })}</h3>
@@ -167,10 +167,10 @@ export default function Detail() {
                                 dbUUID && dbUUID.content && (
                                     <>
                                         <div className="w-[350px] b rounded-[10px] flex items-center justify-start flex-col">
-                                            <div className={`w-[100px] h-[40px] rounded-[10px] ${Object.keys(dbUUID.contentAnalysis).length != 0 ? "bg-[#7FC668] text-[#225011]" : "bg-[#e1a27a] text-[#843434]"} mb-[-20px] z-[1] font-firaSans font-bold flex items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)]`}>
-                                                {Object.keys(dbUUID.contentAnalysis).length != 0 ? "Finished" : "Failed"}
+                                            <div className={`w-[100px] h-[40px] rounded-[10px] ${dbUUID.contentAnalysis != null && Object.keys(dbUUID.contentAnalysis).length != 0 ? "bg-[#7FC668] text-[#225011]" : "bg-[#e1a27a] text-[#843434]"} mb-[-20px] z-[1] font-firaSans font-bold flex items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)]`}>
+                                                {dbUUID.contentAnalysis != null && Object.keys(dbUUID.contentAnalysis).length != 0 ? "Finished" : "Failed"}
                                             </div>
-                                            <div className={`w-full h-[200px] ${Object.keys(dbUUID.contentAnalysis).length != 0 ? "bg-[#9EE2D5]" : "bg-[#f0cfa1]"} rounded-[10px] p-4 pt-[25px] font-firaSans font-bold flex gap-5 flex-col items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)] text-[#514545]`}>
+                                            <div className={`w-full h-[200px] ${dbUUID.contentAnalysis != null && Object.keys(dbUUID.contentAnalysis).length != 0 ? "bg-[#9EE2D5]" : "bg-[#f0cfa1]"} rounded-[10px] p-4 pt-[25px] font-firaSans font-bold flex gap-5 flex-col items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)] text-[#514545]`}>
                                                 <h3 className="text-6xl">{keyIndexTimeline.toLocaleString(undefined, { minimumIntegerDigits: 2 })}</h3>
                                                 <p className="text-[18px] font-normal text-center">We verify content with AI</p>
                                             </div>
@@ -179,10 +179,10 @@ export default function Detail() {
                                         {keyIndexTimeline++ && ''}
 
                                         <div className="w-[350px] b rounded-[10px] flex items-center justify-start flex-col">
-                                            <div className={`w-[100px] h-[40px] rounded-[10px] ${Object.keys(dbUUID.contentFake).length != 0 ? "bg-[#7FC668] text-[#225011]" : "bg-[#e1a27a] text-[#843434]"} mb-[-20px] z-[1] font-firaSans font-bold flex items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)]`}>
-                                                {Object.keys(dbUUID.contentFake).length != 0 ? "Finished" : "Failed"}
+                                            <div className={`w-[100px] h-[40px] rounded-[10px] ${dbUUID.contentFake != null &&  Object.keys(dbUUID.contentFake).length != 0 ? "bg-[#7FC668] text-[#225011]" : "bg-[#e1a27a] text-[#843434]"} mb-[-20px] z-[1] font-firaSans font-bold flex items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)]`}>
+                                                {dbUUID.contentFake != null &&  Object.keys(dbUUID.contentFake).length != 0 ? "Finished" : "Failed"}
                                             </div>
-                                            <div className={`w-full h-[200px] ${Object.keys(dbUUID.contentFake).length != 0 ? "bg-[#9EE2D5]" : "bg-[#f0cfa1]"} rounded-[10px] p-4 pt-[25px] font-firaSans font-bold flex gap-5 flex-col items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)] text-[#514545]`}>
+                                            <div className={`w-full h-[200px] ${dbUUID.contentFake != null &&  Object.keys(dbUUID.contentFake).length != 0 ? "bg-[#9EE2D5]" : "bg-[#f0cfa1]"} rounded-[10px] p-4 pt-[25px] font-firaSans font-bold flex gap-5 flex-col items-center justify-center shadow-[0px_0px_20px_5px_rgba(0,0,0,0.08)] text-[#514545]`}>
                                                 <h3 className="text-6xl">{keyIndexTimeline.toLocaleString(undefined, { minimumIntegerDigits: 2 })}</h3>
                                                 <p className="text-[18px] font-normal text-center">We analyze the content if it is fake or not!</p>
                                             </div>

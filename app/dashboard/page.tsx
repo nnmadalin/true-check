@@ -95,8 +95,16 @@ export default function Dashboard() {
 
     async function handlerFind() {
 
-        const url = new URL(domain);
-        const domainOnly = `${url.protocol}//${url.hostname}`;
+        var url = "";
+        var domainOnly="";
+        try{
+            const urlt = new URL(domain);
+            url = (new URL(domain)).toString();
+            domainOnly = `${urlt.protocol}//${urlt.hostname}`;
+        }catch{
+            url = domain;
+        }
+        
 
         var searchJson: any;
         searchJson = {
@@ -206,7 +214,7 @@ export default function Dashboard() {
 
             //score
             let scoreWebsite = 100.0;
-            scoreWebsite -= ((parseFloat(responseAnalysis.stats.malicious) + parseFloat(responseAnalysis.stats.suspicious))) * 50.0;
+            scoreWebsite -= ((parseFloat(responseAnalysis.stats.malicious) + parseFloat(responseAnalysis.stats.suspicious)) / 91) * 50.0;
             if(responseQuality.unsafe == true)
                 scoreWebsite -= 4;
             if(responseQuality.dns_valid == false)
@@ -229,100 +237,105 @@ export default function Dashboard() {
                 scoreWebsite -= 4;
             scoreWebsite -= (parseInt(responseQuality.risk_score) / 10.0);
 
-            searchJson.scoreWebsite = scoreWebsite;
-
-            
-            //check content - domain
-            const fetchContentDomain = await fetch('/api/content/provide', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ domain: domainOnly, content: content.trim() }),
-                cache: 'no-store'
-            });
-            //return error content - domain
-            if (fetchContentDomain.status != 200) {
-                toast.update(id, { render: `We could not verify the origin of the text!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
-
-                searchJson.logs[searchJson.logs.length] = `We could not verify the origin of the text!`;
-                searchJson.contentDomain = {};
-                dbUpdate(searchJson);
-                setLoading(false);
-                return;
-            }
-            toast(`I was able to verify the provenance of the correct text!`, {
-                autoClose: 3000,
-                type: "success",
-            });
-            searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to verify the provenance of the correct text!`;
-            const responseContentDomain = await fetchContentDomain.json();
-            searchJson.contentDomain = responseContentDomain;
-
-
-            //check content analysis
-            const fetchContentAnalysis = await fetch('/api/content/analysis', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: content.trim() }),
-                cache: 'no-store'
-            });
-            //return error content analysis
-            if (fetchContentAnalysis.status != 200) {
-                toast.update(id, { render: `We could not analyze the content with artificial intelligence!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
-
-                searchJson.logs[searchJson.logs.length] = `We could not analyze the content with artificial intelligence!`;
-                searchJson.contentAnalysis = {};
-                dbUpdate(searchJson);
-                setLoading(false);
-                return;
-            }
-            toast(`I was able to analyze the content with artificial intelligence correctly!`, {
-                autoClose: 3000,
-                type: "success",
-            });
-            searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to analyze the content with artificial intelligence correctly!`;
-            const responseContentAnalysis = await fetchContentAnalysis.json();
-            searchJson.contentAnalysis = responseContentAnalysis;
-
-            //check content is fake
-            const fetchContentFake = await fetch('/api/content/is-fake', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ content: content.trim() }),
-                cache: 'no-store'
-            });
-            //return error content is fake
-            if (fetchContentFake.status != 200) {
-                toast.update(id, { render: `I could not check if the text is fake or not!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
-
-                searchJson.logs[searchJson.logs.length] = `I could not check if the text is fake or not!`;
-                searchJson.contentFake = {};
-                dbUpdate(searchJson);
-                setLoading(false);
-                return;
-            }
-            toast(`I was able to check if the text is fake or not!`, {
-                autoClose: 3000,
-                type: "success",
-            });
-            searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to check if the text is fake or not!`;
-            const responseContentFake = await fetchContentFake.json();
-            searchJson.contentFake = responseContentFake;
-
-
             try{
-                if((JSON.parse(responseContentFake.candidates[0].content.parts[0].text).is_fake).toString().toLowerCase() == "false"){
-                    searchJson.scoreContent = "No";
-                }
-                else
-                    searchJson.scoreContent = "Yes";
+                searchJson.scoreWebsite = scoreWebsite.toFixed(2);
             }catch{
-                searchJson.scoreContent = "N/A";
+                searchJson.scoreWebsite = scoreWebsite;
+            }
+
+            if(content.trim() != ""){
+                //check content - domain
+                const fetchContentDomain = await fetch('/api/content/provide', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ domain: domainOnly, content: content.trim() }),
+                    cache: 'no-store'
+                });
+                //return error content - domain
+                if (fetchContentDomain.status != 200) {
+                    toast.update(id, { render: `We could not verify the origin of the text!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
+
+                    searchJson.logs[searchJson.logs.length] = `We could not verify the origin of the text!`;
+                    searchJson.contentDomain = {};
+                    dbUpdate(searchJson);
+                    setLoading(false);
+                    return;
+                }
+                toast(`I was able to verify the provenance of the correct text!`, {
+                    autoClose: 3000,
+                    type: "success",
+                });
+                searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to verify the provenance of the correct text!`;
+                const responseContentDomain = await fetchContentDomain.json();
+                searchJson.contentDomain = responseContentDomain;
+
+
+                //check content analysis
+                const fetchContentAnalysis = await fetch('/api/content/analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: content.trim() }),
+                    cache: 'no-store'
+                });
+                //return error content analysis
+                if (fetchContentAnalysis.status != 200) {
+                    toast.update(id, { render: `We could not analyze the content with artificial intelligence!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
+
+                    searchJson.logs[searchJson.logs.length] = `We could not analyze the content with artificial intelligence!`;
+                    searchJson.contentAnalysis = {};
+                    dbUpdate(searchJson);
+                    setLoading(false);
+                    return;
+                }
+                toast(`I was able to analyze the content with artificial intelligence correctly!`, {
+                    autoClose: 3000,
+                    type: "success",
+                });
+                searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to analyze the content with artificial intelligence correctly!`;
+                const responseContentAnalysis = await fetchContentAnalysis.json();
+                searchJson.contentAnalysis = responseContentAnalysis;
+
+                //check content is fake
+                const fetchContentFake = await fetch('/api/content/is-fake', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content: content.trim() }),
+                    cache: 'no-store'
+                });
+                //return error content is fake
+                if (fetchContentFake.status != 200) {
+                    toast.update(id, { render: `I could not check if the text is fake or not!`, type: "error", isLoading: false, autoClose: 5000, closeButton: true });
+
+                    searchJson.logs[searchJson.logs.length] = `I could not check if the text is fake or not!`;
+                    searchJson.contentFake = {};
+                    dbUpdate(searchJson);
+                    setLoading(false);
+                    return;
+                }
+                toast(`I was able to check if the text is fake or not!`, {
+                    autoClose: 3000,
+                    type: "success",
+                });
+                searchJson.logs[Object.keys(searchJson.logs).length] = `I was able to check if the text is fake or not!`;
+                const responseContentFake = await fetchContentFake.json();
+                searchJson.contentFake = responseContentFake;
+
+
+                try{
+                    if((JSON.parse(responseContentFake.candidates[0].content.parts[0].text).is_fake).toString().toLowerCase() == "false"){
+                        searchJson.scoreContent = "No";
+                    }
+                    else
+                        searchJson.scoreContent = "Yes";
+                }catch{
+                    searchJson.scoreContent = "N/A";
+                }
             }
 
 
@@ -526,12 +539,12 @@ export default function Dashboard() {
                                                     </td>
                                                     <td className="max-w-[150px] w-[150px]">
                                                         {
-                                                            item.contentAnalysis == null && (item.ping == null || item.quality == null || item.analysis == null || Object.keys(item.ping).length === 0 || Object.keys(item.quality).length === 0 || Object.keys(item.analysis).length === 0) ? (
-                                                                <span className="p-2 pl-3 pr-3 rounded-[20px] bg-[#ffb7b7] text-[#bc6262]">Failed</span>
-                                                            ) : item.contentAnalysis == null || Object.keys(item.contentAnalysis).length === 0 ? (
-                                                                <span className="p-2 pl-3 pr-3 rounded-[20px] bg-[#ffb7b7] text-[#bc6262]">Failed</span>
-                                                            ) : (
+                                                            item.ping != null && item.quality != null  && item.analysis != null && Object.keys(item.ping).length !== 0 && Object.keys(item.quality).length !== 0 && Object.keys(item.analysis).length !== 0 ? (
                                                                 <span className="p-2 pl-3 pr-3 rounded-[20px] bg-[#D6F5CB] text-[#6DAA57]">Finished</span>
+                                                            ) : item.contentAnalysis != null &&  Object.keys(item.contentAnalysis).length !== 0 ? (
+                                                                <span className="p-2 pl-3 pr-3 rounded-[20px] bg-[#D6F5CB] text-[#6DAA57]">Finished</span>
+                                                            ) : (
+                                                                <span className="p-2 pl-3 pr-3 rounded-[20px] bg-[#ffb7b7] text-[#bc6262]">Failed</span>
                                                             )
                                                         }
                                                     </td>

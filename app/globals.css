@@ -156,6 +156,25 @@ body::-webkit-scrollbar {
   background-color: #154621;
   z-index: 1;
 }
+
+.awssld{
+  height: 100vh;
+}
+.awssld__controls__arrow-right::before{
+  background-color:white!important;
+  }
+  
+  .awssld__controls__arrow-right::after{
+  background-color: white!important;
+  }
+  
+  .awssld__controls__arrow-left::before{
+  background-color: white!important;
+  }
+  
+  .awssld__controls__arrow-left::after{
+  background-color: white!important;
+  }
 /*** RESPONSIVE ***/
 /* MOBILE */
 @media screen and (max-width: 576px) {
