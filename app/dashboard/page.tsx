@@ -114,7 +114,7 @@ export default function Dashboard() {
             created: new Date(),
             logs: {},
         }
-
+        
         setLoading(true);
 
        
@@ -418,7 +418,7 @@ export default function Dashboard() {
             return;
         }
 
-        dbUpdate(searchJson);
+        //dbUpdate(searchJson);
         toast.update(id, { render: "You must complete at least one box!", type: "error", isLoading: false, autoClose: 5000, closeButton: true });
         setLoading(false);
     }
